@@ -1,0 +1,2 @@
+javac SortingVisualization.java
+java SortingVisualization

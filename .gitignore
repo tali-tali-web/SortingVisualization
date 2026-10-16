@@ -1,6 +1,8 @@
 # Compiled class file
 *.class
 
+.javaenv
+
 # Log file
 *.log
 
