@@ -23,7 +23,7 @@ public class SortingVisualization {
         frame.setIconImage(new ImageIcon("./resources/icon.png").getImage());
         frame.setLayout(new BorderLayout());
 
-        this.host = new ArrayModel(15, frame.getHeight() / 2, 20);
+        this.host = new ArrayModel(-15, -frame.getHeight() / 2, 20);
         controlPanel = new ControlPanel(this.host);
         visualizationPanel = new VisualizationPanel(this.host);
 

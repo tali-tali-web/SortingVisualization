@@ -36,7 +36,6 @@ public class ArrayModel {
             array[i] = new ArrayElement(options[random.nextInt(options.length-1)], random.nextInt(100));
         }
 
-
     }
 
     public void setLength(int new_length) {
@@ -45,7 +44,11 @@ public class ArrayModel {
     }
 
     public void setSpeed(int new_speed) { this.speed = new_speed; }
+    public void addSpeed(int speed) { this.speed += speed; }
     public int getSpeed() {return this.speed; }
+
+    public void addX(int added) { this.x += added; }
+    public void addY(int added) { this.y += added; }
 
     public void updateAlgorithm(int index) {
         if (index == 0) {
@@ -60,11 +63,11 @@ public class ArrayModel {
 
             BufferedImage image = element.image();
             if (image != null) {
-                g.drawImage(image, this.x + cumulative, this.y, panel);
+                g.drawImage(image, -this.x + cumulative, -this.y, panel);
                 cumulative += image.getWidth() + margin;
             } else {
                 g.setColor(new Color(0));
-                g.fillRect(this.x + cumulative, this.y, 30, 30);
+                g.fillRect(-this.x + cumulative, -this.y, 30, 30);
                 cumulative += 30 + margin;
             }
 
