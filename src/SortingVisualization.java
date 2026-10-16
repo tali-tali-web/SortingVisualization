@@ -2,9 +2,7 @@ package src;
 
 import java.awt.BorderLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 public class SortingVisualization {
 
@@ -17,9 +15,6 @@ public class SortingVisualization {
         frame = new JFrame();
         controlPanel = new ControlPanel();
         visualizationPanel = new VisualizationPanel();
-
-        controlPanel.add(new JButton("Test"));
-        visualizationPanel.add(new JLabel("This is where the canvas goes yes!"));
 
         frame.setLayout(new BorderLayout());
 
