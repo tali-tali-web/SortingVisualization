@@ -12,14 +12,8 @@ public class SortingVisualization {
     private final VisualizationPanel visualizationPanel;
 
     public SortingVisualization() {
+
         frame = new JFrame();
-        controlPanel = new ControlPanel();
-        visualizationPanel = new VisualizationPanel();
-
-        frame.setLayout(new BorderLayout());
-
-        frame.add(controlPanel, BorderLayout.EAST);
-        frame.add(visualizationPanel, BorderLayout.WEST);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
@@ -30,7 +24,13 @@ public class SortingVisualization {
         frame.setIconImage(new ImageIcon("./resources/icon.png").getImage());
         frame.setVisible(true);
 
+        controlPanel = new ControlPanel();
+        visualizationPanel = new VisualizationPanel();
 
+        frame.setLayout(new BorderLayout());
+
+        frame.add(visualizationPanel, BorderLayout.CENTER);
+        frame.add(controlPanel, BorderLayout.EAST);
 
     }
 
