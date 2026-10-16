@@ -13,11 +13,11 @@ public class VisualizationPanel extends JPanel {
         super();
 
         this.host = host;
+        this.host.randomize();
 
         setLayout(null);
         repaint();
         
-
     }
 
     @Override
@@ -26,6 +26,8 @@ public class VisualizationPanel extends JPanel {
 
         g.setColor(new Color(200, 200, 200));
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
+
+        this.host.draw(g, this);
 
         g.setColor(new Color(0, 0, 0));
         g.drawRect(margin, margin, this.getWidth() - 2 * margin, this.getHeight() - 2 * margin);

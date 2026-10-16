@@ -12,7 +12,7 @@ import javax.swing.SpinnerNumberModel;
 public class ControlPanel extends JPanel {
 
     private final JButton plause, reset, randomize;
-    private final JComboBox<String> algoMenu;
+    private final JComboBox<String> menu;
     private final JSlider speedSlider;
     private final JSpinner arraySize;
 
@@ -26,24 +26,35 @@ public class ControlPanel extends JPanel {
         randomize = new JButton("Randomize");
 
         String[] algos = {"Bubble Sort", "Merge Sort", "Insertion Sort", "Selection Sort"};
-        algoMenu = new JComboBox<>(algos);
+        
+        menu = new JComboBox<>(algos);
         arraySize = new JSpinner(new SpinnerNumberModel(20, 5, 100, 1));
         speedSlider = new JSlider(1, 10, 5);
         
-        speedSlider.setMajorTickSpacing(3);
+        speedSlider.setMajorTickSpacing(2);
         speedSlider.setPaintTicks(true);
         speedSlider.setPaintLabels(true);
 
         add(new JLabel("Array size:"));
-        add(new JLabel("Algorithm:"));
-        add(new JLabel("Speed:"));
-
-        add(algoMenu);
-        add(speedSlider);
         add(arraySize);
+
+        add(new JLabel("Algorithm:"));
+        add(menu);
+
+        add(new JLabel("Speed:"));
+        add(speedSlider);
 
         add(plause);
         add(reset);
         add(randomize);
     }
+
+    public JComboBox<String> getMenu() { return this.menu; }
+    public JSpinner getSpinner() { return this.arraySize; }
+    public JSlider getSlider() { return this.speedSlider; }
+
+    public JButton plause() { return this.plause; }
+    public JButton reset() { return this.reset; }
+    public JButton randomize() { return this.randomize; }
+
 }
