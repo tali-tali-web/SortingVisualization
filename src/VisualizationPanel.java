@@ -6,18 +6,17 @@ import javax.swing.JPanel;
 
 public class VisualizationPanel extends JPanel {
 
-    private final int margin;
+    private final int margin = 10;
+    private final ArrayModel host;
 
-    public VisualizationPanel() {
+    public VisualizationPanel(ArrayModel host) {
         super();
 
-        this.setLayout(null);
-        margin = 10;
+        this.host = host;
 
-        // this.add(new JLabel("This is where the canvas goes yes!"));
-        // this.add(new JLabel(new ImageIcon("./resources/cute-blinking.gif")));
-
-        this.repaint();
+        setLayout(null);
+        repaint();
+        
 
     }
 

@@ -1,83 +1,49 @@
+
 package src;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 public class ControlPanel extends JPanel {
 
-    private final JButton up, down, left, right;
-    private int size, x, y;
+    private final JButton plause, reset, randomize;
+    private final JComboBox<String> algoMenu;
+    private final JSlider speedSlider;
+    private final JSpinner arraySize;
 
-    public ControlPanel() {
-        super();
+    private final ArrayModel host;
+
+    public ControlPanel(ArrayModel host) {
+        this.host = host;
+
+        plause = new JButton("Play/Pause");
+        reset = new JButton("Reset");
+        randomize = new JButton("Randomize");
+
+        String[] algos = {"Bubble Sort", "Merge Sort", "Insertion Sort", "Selection Sort"};
+        algoMenu = new JComboBox<>(algos);
+        arraySize = new JSpinner(new SpinnerNumberModel(20, 5, 100, 1));
+        speedSlider = new JSlider(1, 10, 5);
         
+        speedSlider.setMajorTickSpacing(3);
+        speedSlider.setPaintTicks(true);
+        speedSlider.setPaintLabels(true);
 
-        /*Clip clip;
-        AudioInputStream audio;
+        add(new JLabel("Array size:"));
+        add(new JLabel("Algorithm:"));
+        add(new JLabel("Speed:"));
 
-        try {
-            clip = AudioSystem.getClip();
-            audio = AudioSystem.getAudioInputStream(new File("resources/sound.wav"));
+        add(algoMenu);
+        add(speedSlider);
+        add(arraySize);
 
-            clip.open(audio);
-            button.addActionListener(e -> {
-                clip.setFramePosition(0);
-                clip.start();
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
-        this.setLayout(null);
-        this.setPreferredSize(new Dimension(256, 256));
-
-        this.x = 75;
-        this.y = 50;
-        this.size = 32;
-
-        up = new JButton("^"); down = new JButton("v");
-        left = new JButton("<");right = new JButton(">");
-
-        this.updateLocation();
-
-        up.addActionListener(e -> {
-
-        });
-
-        down.addActionListener(e -> {
-        
-        });
-
-        left.addActionListener(e -> {
-
-        });
-
-        right.addActionListener(e -> {
-
-        });
-
-        this.add(left);
-        this.add(right);
-        this.add(up);
-        this.add(down);
-        
-        this.repaint();
-
+        add(plause);
+        add(reset);
+        add(randomize);
     }
-
-    public void updateLocation() {
-        up.setBounds(x + size, y + 0, size, size);
-        down.setBounds(x + size, y + size * 2, size, size);
-        left.setBounds(x + 0, y + size, size, size);
-        right.setBounds(x + size * 2, y + size, size, size);
-    }
-
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-    }
-
 }
