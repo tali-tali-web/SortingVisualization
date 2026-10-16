@@ -32,15 +32,14 @@ public class VisualizationPanel extends JPanel implements KeyListener {
 
             repaint();
         });
-
         controlTimer.start();
 
         addKeyListener(this);   
         addMouseListener(new MouseAdapter() {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            requestFocusInWindow();
-        }});
+            @Override
+            public void mousePressed(MouseEvent e) {
+                requestFocusInWindow();
+            }});
 
         setLayout(null);
         setFocusable(true);
@@ -63,9 +62,7 @@ public class VisualizationPanel extends JPanel implements KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
+    public void keyTyped(KeyEvent e) {}
 
     @Override
     public void keyPressed(KeyEvent e) {

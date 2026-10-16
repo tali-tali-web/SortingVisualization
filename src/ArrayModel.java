@@ -63,11 +63,39 @@ public class ArrayModel {
 
             BufferedImage image = element.image();
             if (image != null) {
-                g.drawImage(image, -this.x + cumulative, -this.y, panel);
+                g.drawImage(
+                    image, -this.x + cumulative, 
+                    -this.y + (element.lift() ? image.getHeight() + margin : 0),
+                    image.getWidth(), 
+                    image.getHeight(), 
+                    panel
+                );
+
+                g.setColor(new Color(255, 255, 255));
+                g.drawString(
+                    (String) Integer.toString(element.value()), 
+                    -this.x + cumulative,
+                    -this.y - (element.lift() ? image.getHeight() + margin : 0) - 20
+                );
                 cumulative += image.getWidth() + margin;
+
             } else {
-                g.setColor(new Color(0));
-                g.fillRect(-this.x + cumulative, -this.y, 30, 30);
+
+                g.setColor(new Color(0, 0, 0));
+                g.fillRect(
+                    -this.x + cumulative, 
+                    -this.y - (element.lift() ? 30 + margin : 0),
+                    30, 
+                    30
+                );
+
+                g.setColor(new Color(255, 255, 255));
+                g.drawString(
+                    (String) Integer.toString(element.value()), 
+                    -this.x + cumulative,
+                    -this.y - (element.lift() ? 30 + margin : 0) + 10
+                );
+
                 cumulative += 30 + margin;
             }
 

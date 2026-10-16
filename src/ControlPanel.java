@@ -17,7 +17,6 @@ public class ControlPanel extends JPanel {
     private final JSpinner arraySize;
 
     private final ArrayModel host;
-
     public ControlPanel(ArrayModel host) {
         this.host = host;
 
