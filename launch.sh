@@ -1,2 +1,1 @@
-javac SortingVisualization.java
-java SortingVisualization
+java ./src/SortingVisualization.java
