@@ -9,13 +9,14 @@ enum Algorithms {
     BUBBLE_SORT, 
     MERGE_SORT, 
     INSERTION_SORT, 
-    SELECTION_SORT
+    SELECTION_SORT,
+    NONE
 }
 
 public class ArrayModel {
 
     private ArrayElement[] array;
-    private int speed = 5;
+    private int speed = 0;
     private final int margin = 5;
 
     private int x, y;
@@ -43,6 +44,9 @@ public class ArrayModel {
         this.randomize();
     }
 
+    public ArrayElement index(int index) { return this.array[index]; }
+    public int length() { return this.array.length; }
+
     public void setSpeed(int new_speed) { this.speed = new_speed; }
     public void addSpeed(int speed) { this.speed += speed; }
     public int getSpeed() {return this.speed; }
@@ -50,10 +54,12 @@ public class ArrayModel {
     public void addX(int added) { this.x += added; }
     public void addY(int added) { this.y += added; }
 
-    public void updateAlgorithm(int index) {
-        if (index == 0) {
-            // Fill this in
-        }
+    public void swap(int i, int j) {
+
+        ArrayElement temp = this.array[j];
+        this.array[j] = this.array[i];
+        this.array[i] = temp;
+
     }
 
     public void draw(Graphics g, VisualizationPanel panel) {

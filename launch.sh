@@ -1,2 +1,2 @@
-javac ./src/*.java
-java ./src/SortingVisualization.java
+javac -d out src/*.java
+java -cp out src.SortingVisualization

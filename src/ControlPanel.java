@@ -16,9 +16,7 @@ public class ControlPanel extends JPanel {
     private final JSlider speedSlider;
     private final JSpinner arraySize;
 
-    private final ArrayModel host;
-    public ControlPanel(ArrayModel host) {
-        this.host = host;
+    public ControlPanel() {
 
         plause = new JButton("Play/Pause");
         reset = new JButton("Reset");

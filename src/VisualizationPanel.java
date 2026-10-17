@@ -7,7 +7,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 public class VisualizationPanel extends JPanel implements KeyListener {
 
@@ -15,24 +14,17 @@ public class VisualizationPanel extends JPanel implements KeyListener {
     private final ArrayModel host;
 
     private boolean up, down, left, right;
-    private final Timer controlTimer;
+
+    public boolean up() { return this.up; }
+    public boolean down() { return this.down; }
+    public boolean left() { return this.left; }
+    public boolean right() { return this.right; }
 
     public VisualizationPanel(ArrayModel host) {
         super();
 
         this.host = host;
         this.host.randomize();
-
-        controlTimer = new Timer(16, e -> {
-
-            if (up) this.host.addY(-10);
-            if (down) this.host.addY(10);
-            if (left) this.host.addX(-10);
-            if (right) this.host.addX(10);
-
-            repaint();
-        });
-        controlTimer.start();
 
         addKeyListener(this);   
         addMouseListener(new MouseAdapter() {
@@ -92,21 +84,11 @@ public class VisualizationPanel extends JPanel implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_W -> {
-                up = false;
-            }
-            case KeyEvent.VK_A -> {
-                left = false;
-            }
-            case KeyEvent.VK_S -> {
-                down = false;
-            }
-            case KeyEvent.VK_D -> {
-                right = false;
-            }
-            default -> {
-                
-            }
+            case KeyEvent.VK_W -> up = false;
+            case KeyEvent.VK_A -> left = false;
+            case KeyEvent.VK_S -> down = false;
+            case KeyEvent.VK_D -> right = false;
+            default -> {}
         }
     }
 
