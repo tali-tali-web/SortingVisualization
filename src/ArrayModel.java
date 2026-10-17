@@ -44,7 +44,14 @@ public class ArrayModel {
         this.randomize();
     }
 
-    public ArrayElement index(int index) { return this.array[index]; }
+    public ArrayElement index(int index) { 
+        return (index < this.array.length && index >= 0) ? this.array[index] : null; 
+    }
+
+    public void setIndex(ArrayElement element, int i) {
+        this.array[i] = element;
+    }
+
     public int length() { return this.array.length; }
 
     public void setSpeed(int new_speed) { this.speed = new_speed; }

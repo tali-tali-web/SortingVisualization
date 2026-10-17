@@ -111,12 +111,9 @@ public class SortingVisualization {
         controlTimer.start();
         frame.setVisible(true);
 
-        Clip clip = null;
-        Clip mambo_clip = null;
-
         try {
-            clip = AudioSystem.getClip();
-            mambo_clip = AudioSystem.getClip();
+            Clip clip = AudioSystem.getClip();
+            Clip mambo_clip = AudioSystem.getClip();
 
             AudioInputStream audio = AudioSystem.getAudioInputStream(
                 new File("./resources/audio/boom-boom.wav")

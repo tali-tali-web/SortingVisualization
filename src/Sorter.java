@@ -4,10 +4,12 @@ import javax.sound.sampled.Clip;
 
 public class Sorter {
 
-    private int i, j, k, width, counter;
-    private int[] tempArray;
-
+    private int i, j;
     private ArrayElement a, b;
+
+    private int left, middle, right, width, counter;
+    private ArrayElement[] temporary;
+
     public Algorithms sortType;
 
     private int stage;
@@ -131,23 +133,71 @@ public class Sorter {
 
     public void mergeSort(ArrayModel model) {
         // How is this even supposed to work...
-
         switch (this.stage) {
             case 0 -> {
-                
-                i = k + 1;
-                j = Math.min(model.length(), i + width);
-                k = Math.min(model.length(), j + width);
+                left = right;
 
-                this.stage++;
+                if (left >= model.length()) {
+                    width *= 2;
+
+                    if (width >= model.length()) {
+                        end = true;
+                        return;
+                    }
+
+                    left = 0;
+                }
+
+                middle = Math.min(left + width, model.length());
+                right = Math.min(middle + width, model.length());
+
+                i = left;
+                j = middle;
+                counter = 0;
+
+                this.stage = 1;
+                
             } case 1 -> {
-                
-                tempArray[counter++]
-                
+
+                a = (i < middle) ? model.index(i) : null;
+                b = (j < right) ? model.index(j) : null;
+
+                if (a == null && b == null) {
+                    i = left;
+                    counter = 0;
+
+                    this.stage = 2;
+
+                } else if (a == null) {
+                    temporary[counter++] = b;
+                    b.setLift(true);
+                    j++;
+
+                } else if (b == null) {
+                    temporary[counter++] = a;
+                    a.setLift(true);
+                    i++;
+
+                } else if (a.value() > b.value()) {
+                    temporary[counter++] = b;
+                    b.setLift(true);
+                    j++;
+
+                } else {
+                    temporary[counter++] = a;
+                    a.setLift(true);
+                    i++;
+
+                }
 
             } case 2 -> {
-                
-            } case 3 -> {
+
+                if (i < right) {
+                    temporary[counter].setLift(false);
+                    model.setIndex(temporary[counter++], i++);
+                } else {
+                    this.stage = 0;
+                }
                 
             } default -> {
                 System.out.println("How did you get here.");
@@ -196,11 +246,18 @@ public class Sorter {
 
             } case Algorithms.MERGE_SORT -> {
                 
-                i = 0;
-                j = 0;
-                k = -1;
                 width = 1;
-                tempArray = new int[model.length()];
+
+                left = 0;
+                middle = width; 
+                right = middle + width;
+
+                i = left;
+                j = middle;
+
+                this.stage = 1;
+
+                temporary = new ArrayElement[model.length()];
 
             } case Algorithms.SELECTION_SORT -> {
 
