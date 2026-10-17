@@ -132,7 +132,7 @@ public class Sorter {
     }
 
     public void mergeSort(ArrayModel model) {
-        // How is this even supposed to work...
+        // How is this even supposed to work... ez pz lemon squeezy
         switch (this.stage) {
             case 0 -> {
                 left = right;
@@ -156,7 +156,8 @@ public class Sorter {
                 counter = 0;
 
                 this.stage = 1;
-                
+                this.playSound();
+
             } case 1 -> {
 
                 a = (i < middle) ? model.index(i) : null;
@@ -167,25 +168,27 @@ public class Sorter {
                     counter = 0;
 
                     this.stage = 2;
+                    this.playSound();
+
 
                 } else if (a == null) {
-                    temporary[counter++] = b;
                     b.setLift(true);
+                    temporary[counter++] = b;
                     j++;
 
                 } else if (b == null) {
-                    temporary[counter++] = a;
                     a.setLift(true);
+                    temporary[counter++] = a;
                     i++;
 
                 } else if (a.value() > b.value()) {
-                    temporary[counter++] = b;
                     b.setLift(true);
+                    temporary[counter++] = b;
                     j++;
 
                 } else {
-                    temporary[counter++] = a;
                     a.setLift(true);
+                    temporary[counter++] = a;
                     i++;
 
                 }
@@ -193,9 +196,11 @@ public class Sorter {
             } case 2 -> {
 
                 if (i < right) {
-                    temporary[counter].setLift(false);
                     model.setIndex(temporary[counter++], i++);
+                    temporary[counter-1].setLift(false);
+                    
                 } else {
+                    this.playSound();
                     this.stage = 0;
                 }
                 
@@ -207,7 +212,52 @@ public class Sorter {
     }
 
     public void selectionSort(ArrayModel model) {
+        if (counter >= model.length()) {
+            end = true;
+            return;
+        }
+        
+        switch (this.stage) {
+            case 0 -> {
 
+                model.index(i).setLift(true);
+                if (j < model.length()) {
+                    
+                    model.index(j - 1).setLift(false);
+                    model.index(j).setLift(true);
+                    if (model.index(i).value() > model.index(j).value()) {
+                        this.stage = 1;
+                    }
+
+                } else {
+
+                    model.index(counter).setLift(true);
+                    this.stage = 2;
+                }
+
+                j++;
+
+            } case 1 -> {
+                
+                model.index(i).setLift(false);
+                i = j - 1;
+                this.stage = 0;
+
+            } case 2 -> {   
+                
+                model.swap(i, counter);
+
+                model.index(i).setLift(false);
+                model.index(counter++).setLift(false);
+
+                i = counter;
+                j = i + 1;
+                this.stage = 0;
+
+            } default -> {
+                System.out.println("Yeah don't be here.");
+            }
+        }
     }
 
     public void step(ArrayModel model) {
@@ -260,6 +310,12 @@ public class Sorter {
                 temporary = new ArrayElement[model.length()];
 
             } case Algorithms.SELECTION_SORT -> {
+                
+                i = 0;
+                j = 1;
+
+                stage = 0;
+                counter = 0;
 
             } default -> {
                 System.out.println("what the hell kind of sort did you give me...");

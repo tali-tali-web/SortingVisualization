@@ -97,7 +97,7 @@ public class SortingVisualization {
             visualizationPanel.repaint();    
         });
 
-        controlTimer = new Timer(16, e -> {
+        controlTimer = new Timer(30, e -> {
 
             if (visualizationPanel.up()) host.addY(-10);
             if (visualizationPanel.down()) host.addY(10);
