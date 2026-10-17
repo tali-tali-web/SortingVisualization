@@ -14,15 +14,11 @@ public class Sorter {
     private Clip sound;
 
     public Sorter() {
-        i = 0;
-        j = 0;
 
-        stage = 0;
-        end = false;
-        swap = false;
         sound = null;
-
         sortType = Algorithms.BUBBLE_SORT;
+
+        this.prepare();
     }
 
     public void setSound(Clip new_sound) { this.sound = new_sound; }
@@ -71,7 +67,7 @@ public class Sorter {
                 }
 
             } default -> {
-
+                System.out.println("How did you get here.");
             }
         }
 
@@ -79,7 +75,57 @@ public class Sorter {
     }
 
     public void insertionSort(ArrayModel model) {
+        switch (this.stage) {
+            case 0 -> {
 
+                swap = false;
+                if (i >= model.length()) {
+                    end = true;
+                    return;
+
+                } else if (i <= 0) {
+                    i = j++;
+                    stage = 0;
+                    return;
+                }
+
+                a = model.index(i);
+                b = model.index(i-1);
+
+                a.setLift(true);
+                b.setLift(true);
+
+                this.stage++;
+
+            } case 1 -> {
+                if (b.value() > a.value()) {
+                    swap = true;
+                }
+
+                this.stage++;
+            } case 2 -> {
+                a.setLift(false);
+                b.setLift(false);
+
+                if (swap) {
+                    model.swap(i, i-1);
+                    this.playSound();
+
+                    i--;
+                    this.stage = 0;
+                    return;
+                }
+
+                this.stage++;
+            } case 3 -> {
+
+                i = j++;
+                this.stage = 0;
+
+            } default -> {
+                System.out.println("How did you get here.");
+            }
+        }
     }
 
     public void mergeSort(ArrayModel model) {
@@ -103,14 +149,38 @@ public class Sorter {
                 this.mergeSort(model);
             } case Algorithms.SELECTION_SORT -> {
                 this.selectionSort(model);
-            }default -> {
+            } default -> {
                 System.out.println("what the hell kind of sort did you give me...");
             }
         }
     }
 
-    public void prep() {
-        
+    public void prepare() {
+        switch (this.sortType) {
+            case Algorithms.BUBBLE_SORT -> {
+                i = 0;
+                j = 1;
+
+                stage = 0;
+                end = false;
+                swap = false;
+
+            } case Algorithms.INSERTION_SORT -> {
+                i = 1;
+                j = 1;
+
+                stage = 0;
+                end = false;
+                swap = false;
+
+            } case Algorithms.MERGE_SORT -> {
+
+            } case Algorithms.SELECTION_SORT -> {
+
+            } default -> {
+                System.out.println("what the hell kind of sort did you give me...");
+            }
+        }
     }
 
     // SELECT
