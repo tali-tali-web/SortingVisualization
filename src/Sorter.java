@@ -4,7 +4,9 @@ import javax.sound.sampled.Clip;
 
 public class Sorter {
 
-    private int i, j;
+    private int i, j, k, width, counter;
+    private int[] tempArray;
+
     private ArrayElement a, b;
     public Algorithms sortType;
 
@@ -18,7 +20,6 @@ public class Sorter {
         sound = null;
         sortType = Algorithms.BUBBLE_SORT;
 
-        this.prepare();
     }
 
     public void setSound(Clip new_sound) { this.sound = new_sound; }
@@ -129,6 +130,29 @@ public class Sorter {
     }
 
     public void mergeSort(ArrayModel model) {
+        // How is this even supposed to work...
+
+        switch (this.stage) {
+            case 0 -> {
+                
+                i = k + 1;
+                j = Math.min(model.length(), i + width);
+                k = Math.min(model.length(), j + width);
+
+                this.stage++;
+            } case 1 -> {
+                
+                tempArray[counter++]
+                
+
+            } case 2 -> {
+                
+            } case 3 -> {
+                
+            } default -> {
+                System.out.println("How did you get here.");
+            }
+        }
 
     }
 
@@ -155,25 +179,28 @@ public class Sorter {
         }
     }
 
-    public void prepare() {
+    public void prepare(ArrayModel model) {
+
+        stage = 0;
+        end = false;
+        swap = false;
+
         switch (this.sortType) {
             case Algorithms.BUBBLE_SORT -> {
                 i = 0;
                 j = 1;
 
-                stage = 0;
-                end = false;
-                swap = false;
-
             } case Algorithms.INSERTION_SORT -> {
                 i = 1;
                 j = 1;
 
-                stage = 0;
-                end = false;
-                swap = false;
-
             } case Algorithms.MERGE_SORT -> {
+                
+                i = 0;
+                j = 0;
+                k = -1;
+                width = 1;
+                tempArray = new int[model.length()];
 
             } case Algorithms.SELECTION_SORT -> {
 

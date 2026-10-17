@@ -45,20 +45,26 @@ public class SortingVisualization {
         controlPanel.getMenu().addActionListener(e -> { 
 
             String algorithm = (String) controlPanel.getMenu().getSelectedItem();
-            if (algorithm.equals("Bubble Sort")) {
-                sorter.sortType = Algorithms.BUBBLE_SORT;
-            } else if (algorithm.equals("Insertion Sort")) {
-                sorter.sortType = Algorithms.INSERTION_SORT;
-            } else if (algorithm.equals("Merge Sort")) {
-                sorter.sortType = Algorithms.MERGE_SORT;
-            } else if (algorithm.equals("Selection Sort")) {
-                sorter.sortType = Algorithms.SELECTION_SORT;
-            } else {
-                sorter.sortType = Algorithms.NONE;
-                System.out.printf("What did you type?? WHAT IS %S\n", algorithm);
+            switch (algorithm) {
+                case "Bubble Sort":
+                    sorter.sortType = Algorithms.BUBBLE_SORT;
+                    break;
+                case "Insertion Sort":
+                    sorter.sortType = Algorithms.INSERTION_SORT;
+                    break;
+                case "Merge Sort":
+                    sorter.sortType = Algorithms.MERGE_SORT;
+                    break;
+                case "Selection Sort":
+                    sorter.sortType = Algorithms.SELECTION_SORT;
+                    break;
+                default:
+                    sorter.sortType = Algorithms.NONE;
+                    System.out.printf("What did you type?? WHAT IS %S\n", algorithm);
+                    break;
             }
 
-            sorter.prepare();
+            sorter.prepare(host);
             visualizationPanel.repaint();
         });
 
