@@ -1,13 +1,20 @@
 
 package src;
 
+import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
+import javax.swing.JTextPane;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 public class ControlPanel extends JPanel {
 
@@ -15,6 +22,8 @@ public class ControlPanel extends JPanel {
     private final JComboBox<String> menu;
     private final JSlider speedSlider;
     private final JSpinner arraySize;
+
+    private JTextPane codeText;
 
     public ControlPanel() {
 
@@ -44,6 +53,25 @@ public class ControlPanel extends JPanel {
         add(plause);
         add(reset);
         add(randomize);
+
+        codeText = new JTextPane();
+
+        StyledDocument doc = codeText.getStyledDocument();
+        Style style = doc.addStyle("highlight", null);
+
+        StyleConstants.setForeground(style, Color.BLUE);
+        StyleConstants.setBold(style, true);
+
+        codeText.setStyledDocument(doc);
+
+        try {
+            doc.insertString(0, "This is a", style);
+            doc.insertString(doc.getLength(), "Button: ", null);
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+
+        this.add(new JScrollPane(codeText));
     }
 
     public JComboBox<String> getMenu() { return this.menu; }

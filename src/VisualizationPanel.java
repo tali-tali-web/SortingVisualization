@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 
+
 public class VisualizationPanel extends JPanel implements KeyListener {
 
     private final int margin = 10;
