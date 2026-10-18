@@ -16,6 +16,8 @@ enum Algorithms {
 public class ArrayModel {
 
     private ArrayElement[] array;
+    private ArrayElement[] original;
+
     private int speed = 0;
     private final int margin = 5;
 
@@ -25,23 +27,8 @@ public class ArrayModel {
         this.x = x;
         this.y = y;
         this.array = new ArrayElement[length];
+        this.original = new ArrayElement[length];
 
-    }
-
-    public void randomize() {
-
-        Random random = new Random();
-        BufferedImage[] options = {null, null, null};
-
-        for (int i = 0; i < array.length; i++) {
-            array[i] = new ArrayElement(options[random.nextInt(options.length-1)], random.nextInt(100));
-        }
-
-    }
-
-    public void setLength(int new_length) {
-        this.array = new ArrayElement[new_length];
-        this.randomize();
     }
 
     public ArrayElement index(int index) { 
@@ -51,23 +38,23 @@ public class ArrayModel {
     public void setIndex(ArrayElement element, int i) {
         this.array[i] = element;
     }
-
+    
+    
     public int length() { return this.array.length; }
+    public void setLength(int new_length) {
+        this.array = new ArrayElement[new_length];
+        this.original = new ArrayElement[new_length];
+
+        this.randomize();
+    }
+
 
     public void setSpeed(int new_speed) { this.speed = new_speed; }
-    public void addSpeed(int speed) { this.speed += speed; }
-    public int getSpeed() {return this.speed; }
+    public int  getSpeed(             ) {return this.speed;       }
+    public void addSpeed(int speed    ) { this.speed += speed;    }
 
     public void addX(int added) { this.x += added; }
     public void addY(int added) { this.y += added; }
-
-    public void swap(int i, int j) {
-
-        ArrayElement temp = this.array[j];
-        this.array[j] = this.array[i];
-        this.array[i] = temp;
-
-    }
 
     public void draw(Graphics g, VisualizationPanel panel) {
         
@@ -113,6 +100,33 @@ public class ArrayModel {
             }
 
         }
+    }
+
+    public void randomize() {
+
+        Random random = new Random();
+        BufferedImage[] options = {null, null, null};
+
+        for (int i = 0; i < array.length; i++) {
+            array[i] = new ArrayElement(options[random.nextInt(options.length-1)], random.nextInt(100));
+            original[i] = array[i];
+        }
+
+    }
+
+    public void reset() {
+        for (int i = 0; i < array.length; i++) {
+            array[i] = original[i];
+            array[i].setLift(false);
+        }
+    }
+
+    public void swap(int i, int j) {
+
+        ArrayElement temp = this.array[j];
+        this.array[j] = this.array[i];
+        this.array[i] = temp;
+
     }
 
 }

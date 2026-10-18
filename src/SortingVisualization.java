@@ -10,6 +10,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JSplitPane;
 import javax.swing.Timer;
 
 public class SortingVisualization {
@@ -18,9 +19,12 @@ public class SortingVisualization {
 
     private final ControlPanel controlPanel;
     private final VisualizationPanel visualizationPanel;
+    private final CodePanel codePanel;
     private final Timer controlTimer;
+    private final Timer sortTimer;
     private final Sorter sorter;
     private final ArrayModel host;
+    private final JSplitPane splitter;
 
     public SortingVisualization() {
 
@@ -33,14 +37,30 @@ public class SortingVisualization {
         frame.setIconImage(new ImageIcon("./resources/icon.png").getImage());
         frame.setLayout(new BorderLayout());
 
+
+
         this.host = new ArrayModel(-15, -frame.getHeight() / 2, 20);
 
+        // Initializing all the relevant parts of the program
         sorter = new Sorter();
         controlPanel = new ControlPanel();
-        visualizationPanel = new VisualizationPanel(this.host);
 
-        frame.add(visualizationPanel, BorderLayout.CENTER);
+        visualizationPanel = new VisualizationPanel(this.host);
+        codePanel = new CodePanel();
+
+        splitter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, visualizationPanel, codePanel);
+        splitter.setResizeWeight(0.9);
+        splitter.setDividerSize(0);
+
+        // Adding everything relevant
+        frame.add(splitter, BorderLayout.CENTER);
         frame.add(controlPanel, BorderLayout.SOUTH);
+
+        // These are the action listeners I had to elevate them up to this part 
+        // In order to make it possible for them to interact with other panels 
+        // I really tried to separate them into their own class files but it's not worth
+        // the complexity
+        // Following java coding standards, I am using getter functions
 
         controlPanel.getMenu().addActionListener(e -> { 
 
@@ -70,46 +90,79 @@ public class SortingVisualization {
 
         controlPanel.getSpinner().addChangeListener(e -> { 
             host.setLength((int) controlPanel.getSpinner().getValue()); 
+            sorter.prepare(host);
             visualizationPanel.repaint();
         });
         
-        controlPanel.getSlider().addChangeListener(e -> { 
-            host.setSpeed((int) controlPanel.getSlider().getValue()); 
-            visualizationPanel.repaint();
-        });
-
         controlPanel.plause().addActionListener(e -> {
 
             sorter.step(host);
+            sorter.prepare(host);
 
             host.setSpeed(host.getSpeed() == 0 ? (int) controlPanel.getSlider().getValue() : 0);
+            
             visualizationPanel.repaint();
         });
 
         controlPanel.reset().addActionListener(e -> {
             host.setSpeed(0);
+
+            host.reset();
+            sorter.prepare(host);
             visualizationPanel.repaint();
             // Add option to start from the initial parameters
         });
 
-        controlPanel.randomize().addActionListener(e -> { 
-            host.randomize();
-            visualizationPanel.repaint();    
+        sortTimer = new Timer(16, e -> {
+            if (host.getSpeed() != 0) sorter.step(host);
+            visualizationPanel.repaint();
         });
 
-        controlTimer = new Timer(30, e -> {
+        controlTimer = new Timer(16, e -> {
 
             if (visualizationPanel.up()) host.addY(-10);
             if (visualizationPanel.down()) host.addY(10);
             if (visualizationPanel.left()) host.addX(-10);
             if (visualizationPanel.right()) host.addX(10);
 
-            if (host.getSpeed() != 0) sorter.step(host);
+            if (host.getSpeed() == 0) {
+                sortTimer.stop();
+                visualizationPanel.repaint();
 
-            visualizationPanel.repaint();
+            } else {
+
+                int max = controlPanel.getSlider().getMaximum();
+                int min = controlPanel.getSlider().getMinimum();
+
+                int delayms = 50 * (max - host.getSpeed()) / (max - min);
+                sortTimer.setDelay(delayms);
+                if (!sortTimer.isRunning()) {
+                    sortTimer.start();
+                }
+            }
+
         });
+        
         controlTimer.start();
+        sortTimer.start();
+
+        controlPanel.randomize().addActionListener(e -> { 
+
+            controlTimer.stop();
+            sortTimer.stop();
+
+            host.randomize();
+            sorter.prepare(host);
+
+            controlTimer.start();
+            sortTimer.start();
+
+            visualizationPanel.repaint();    
+        });
+
         frame.setVisible(true);
+
+        // Background audio, just loading of all the audio I needed
 
         try {
             Clip clip = AudioSystem.getClip();

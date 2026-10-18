@@ -13,7 +13,7 @@ public class Sorter {
     public Algorithms sortType;
 
     private int stage;
-    private boolean swap, end;
+    private boolean end;
 
     private Clip sound;
 
@@ -42,19 +42,16 @@ public class Sorter {
                 a = model.index(i);
                 b = model.index(j);
 
-                swap = false;
                 a.setLift(true);
                 b.setLift(true);
 
             } case 1 -> {
-                swap = a.value() > b.value();
-
-            } case 2 -> {
-                if (swap) {
+                if (a.value() > b.value()) {
                     model.swap(i, j);
                     this.playSound();
                 }
-            } case 3 -> {
+
+            } case 2 -> {
 
                 a.setLift(false);
                 b.setLift(false);
@@ -74,19 +71,21 @@ public class Sorter {
             }
         }
 
-        stage = (stage + 1) % 4;
+        stage = (stage + 1) % 3;
     }
 
     public void insertionSort(ArrayModel model) {
         switch (this.stage) {
             case 0 -> {
 
-                swap = false;
                 if (i >= model.length()) {
                     end = true;
                     return;
 
                 } else if (i <= 0) {
+                    if (a != null) a.setLift(false);
+                    if (b != null) b.setLift(false);
+
                     i = j++;
                     stage = 0;
                     return;
@@ -102,25 +101,25 @@ public class Sorter {
 
             } case 1 -> {
                 if (b.value() > a.value()) {
-                    swap = true;
-                }
-
-                this.stage++;
-            } case 2 -> {
-                a.setLift(false);
-                b.setLift(false);
-
-                if (swap) {
                     model.swap(i, i-1);
                     this.playSound();
+                    
+                    a.setLift(false);
+                    b.setLift(false);
 
                     i--;
                     this.stage = 0;
                     return;
+                } else {
+                    a.setLift(false);
+                    b.setLift(false);
                 }
 
                 this.stage++;
-            } case 3 -> {
+            } case 2 -> {
+
+                a.setLift(false);
+                b.setLift(false);
 
                 i = j++;
                 this.stage = 0;
@@ -262,7 +261,10 @@ public class Sorter {
 
     public void step(ArrayModel model) {
 
-        if (end) return;
+        if (end) {
+            model.setSpeed(0); 
+            return;
+        }
         
         switch (this.sortType) {
             case Algorithms.BUBBLE_SORT -> {
@@ -282,8 +284,8 @@ public class Sorter {
     public void prepare(ArrayModel model) {
 
         stage = 0;
+        counter = 0;
         end = false;
-        swap = false;
 
         switch (this.sortType) {
             case Algorithms.BUBBLE_SORT -> {
@@ -313,9 +315,6 @@ public class Sorter {
                 
                 i = 0;
                 j = 1;
-
-                stage = 0;
-                counter = 0;
 
             } default -> {
                 System.out.println("what the hell kind of sort did you give me...");
