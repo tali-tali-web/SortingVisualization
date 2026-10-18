@@ -39,7 +39,7 @@ public class ArrayModel {
         this.array[i] = element;
     }
     
-    
+
     public int length() { return this.array.length; }
     public void setLength(int new_length) {
         this.array = new ArrayElement[new_length];
@@ -103,7 +103,6 @@ public class ArrayModel {
     }
 
     public void randomize() {
-
         Random random = new Random();
         BufferedImage[] options = {null, null, null};
 
@@ -111,7 +110,6 @@ public class ArrayModel {
             array[i] = new ArrayElement(options[random.nextInt(options.length-1)], random.nextInt(100));
             original[i] = array[i];
         }
-
     }
 
     public void reset() {
@@ -122,11 +120,9 @@ public class ArrayModel {
     }
 
     public void swap(int i, int j) {
-
         ArrayElement temp = this.array[j];
         this.array[j] = this.array[i];
         this.array[i] = temp;
-
     }
 
 }
