@@ -2,6 +2,7 @@ package src;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.AudioInputStream;
@@ -11,6 +12,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.Timer;
 
@@ -33,13 +35,11 @@ public class SortingVisualization {
         frame = new JFrame();
         
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000, 600);
+        frame.setSize(1200, 600);
         frame.setLocationRelativeTo(null);
         frame.setTitle("BSIT BASIC SORTING ALGORITHMS BOIII");
         frame.setIconImage(new ImageIcon("./resources/icon.png").getImage());
         frame.setLayout(new BorderLayout());
-
-
 
         this.host = new ArrayModel(-15, -frame.getHeight() / 2, 20);
 
@@ -50,11 +50,13 @@ public class SortingVisualization {
         visualizationPanel = new VisualizationPanel(this.host);
         codePanel = new CodePanel();
 
-        splitter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, visualizationPanel, codePanel);
-        splitter.setResizeWeight(0.8);
+        splitter = new JSplitPane(JSplitPane.VERTICAL_SPLIT, codePanel, new JPanel());
+        splitter.setResizeWeight(0.5);
+        splitter.setPreferredSize(new Dimension(290, 500));
 
         // Adding everything relevant
-        frame.add(splitter, BorderLayout.CENTER);
+        frame.add(visualizationPanel, BorderLayout.CENTER);
+        frame.add(splitter, BorderLayout.EAST);
         frame.add(controlPanel, BorderLayout.SOUTH);
 
         // These are the action listeners I had to elevate them up to this part 

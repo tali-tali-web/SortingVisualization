@@ -2,7 +2,6 @@ package src;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import java.util.Random;
 import javax.swing.ImageIcon;
 
@@ -62,47 +61,23 @@ public class ArrayModel {
         int cumulative = 0;
         for (ArrayElement element : array) {
 
-            BufferedImage image = element.image();
-            if (image != null) {
-                g.drawImage(
-                    image, -this.x + cumulative, 
-                    -this.y + (element.lift() ? image.getHeight() + margin : 0),
-                    image.getWidth(), 
-                    image.getHeight(), 
-                    panel
-                );
 
-                g.setColor(new Color(255, 255, 255));
-                g.drawString(
-                    (String) Integer.toString(element.value()), 
-                    -this.x + cumulative,
-                    -this.y - (element.lift() ? image.getHeight() + margin : 0) - 20
-                );
-                cumulative += image.getWidth() + margin;
+            g.setColor(element.getLift() ? new Color(255, 100, 100) : new Color(255, 255, 255));
+            g.fillRect(
+                -this.x + cumulative, 
+                -this.y - (element.getLift() ? 30 + margin : 0) - 30 - element.getValue() * 2,
+                30, 
+                30 + element.getValue() * 2
+            );
 
-            } else {
+            g.setColor(new Color(0, 0, 0));
+            g.drawString(
+                (String) Integer.toString(element.getValue()), 
+                -this.x + cumulative,
+                -this.y - (element.getLift() ? 30 + margin : 0) - 10
+            );
 
-                if (element.lift()) {
-                    g.setColor(new Color(255, 100, 100));
-                } else {
-                    g.setColor(new Color(255, 255, 255));
-                }
-                g.fillRect(
-                    -this.x + cumulative, 
-                    -this.y - (element.lift() ? 30 + margin : 0) - 30 - element.value() * 2,
-                    30, 
-                    30 + element.value() * 2
-                );
-
-                g.setColor(new Color(0, 0, 0));
-                g.drawString(
-                    (String) Integer.toString(element.value()), 
-                    -this.x + cumulative,
-                    -this.y - (element.lift() ? 30 + margin : 0) - 10
-                );
-
-                cumulative += 30 + margin;
-            }
+            cumulative += 30 + margin;
 
         }
 
@@ -114,10 +89,8 @@ public class ArrayModel {
 
     public void randomize() {
         Random random = new Random();
-        BufferedImage[] options = {null, null, null};
-
         for (int i = 0; i < array.length; i++) {
-            array[i] = new ArrayElement(options[random.nextInt(options.length-1)], random.nextInt(100));
+            array[i] = new ArrayElement(random.nextInt(100));
             original[i] = array[i];
         }
     }
