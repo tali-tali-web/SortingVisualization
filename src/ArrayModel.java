@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.Random;
+import javax.swing.ImageIcon;
 
 enum Algorithms {
     BUBBLE_SORT, 
@@ -81,25 +82,34 @@ public class ArrayModel {
 
             } else {
 
-                g.setColor(new Color(0, 0, 0));
+                if (element.lift()) {
+                    g.setColor(new Color(255, 100, 100));
+                } else {
+                    g.setColor(new Color(255, 255, 255));
+                }
                 g.fillRect(
                     -this.x + cumulative, 
-                    -this.y - (element.lift() ? 30 + margin : 0),
+                    -this.y - (element.lift() ? 30 + margin : 0) - 30 - element.value() * 2,
                     30, 
-                    30
+                    30 + element.value() * 2
                 );
 
-                g.setColor(new Color(255, 255, 255));
+                g.setColor(new Color(0, 0, 0));
                 g.drawString(
                     (String) Integer.toString(element.value()), 
                     -this.x + cumulative,
-                    -this.y - (element.lift() ? 30 + margin : 0) + 10
+                    -this.y - (element.lift() ? 30 + margin : 0) - 10
                 );
 
                 cumulative += 30 + margin;
             }
 
         }
+
+        g.drawImage(new ImageIcon("./resources/teto-kasane-teto.gif").getImage(), -x - 100, -y + 100,  panel);
+        g.drawImage(new ImageIcon("./resources/kasane-teto-teto.gif").getImage(), -x - 100, -y - 200,  panel);
+        g.drawImage(new ImageIcon("./resources/pearto-teto.gif").getImage(), -x + 300, -y - 250,  panel);
+
     }
 
     public void randomize() {

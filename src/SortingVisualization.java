@@ -1,6 +1,7 @@
 package src;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.AudioInputStream;
@@ -25,6 +26,7 @@ public class SortingVisualization {
     private final Sorter sorter;
     private final ArrayModel host;
     private final JSplitPane splitter;
+    private float hue = 0f;
 
     public SortingVisualization() {
 
@@ -181,6 +183,7 @@ public class SortingVisualization {
             visualizationPanel.repaint();
         });
 
+        
         controlTimer = new Timer(16, e -> {
 
             if (visualizationPanel.up()) host.addY(-10);
@@ -203,6 +206,16 @@ public class SortingVisualization {
                     sortTimer.start();
                 }
             }
+
+            hue += 0.005f;
+            if (hue >= 1f) hue = 0f;
+
+            controlPanel.setBackground(Color.getHSBColor(hue, 1f, 1f));
+            controlPanel.getSlider().setBackground(Color.getHSBColor(hue, 1f, 1f));
+            controlPanel.getSpinner().setBackground(Color.getHSBColor(hue, 1f, 1f));
+            
+            //controlPanel.setBackground(Color.PINK);
+
 
         });
         
@@ -253,6 +266,23 @@ public class SortingVisualization {
             e.printStackTrace();
         }
 
+        sorter.prepare(host);
+        codePanel.setText("""
+                                                          
+        void bubbleSort(int[] array, int n) {
+
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n - i - 1; j++) {
+
+                    if (array[j] > array[j + 1]) {
+                        swap(j, j + 1);
+                    }
+
+                }
+            }
+        }
+
+        """);
     }
 
     public void placeholder() {

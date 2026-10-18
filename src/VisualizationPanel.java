@@ -2,10 +2,12 @@ package src;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 
@@ -44,14 +46,25 @@ public class VisualizationPanel extends JPanel implements KeyListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        g.setColor(new Color(200, 200, 200));
+        g.setColor(new Color(0, 0, 0));
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
+
+
+        Image spotlight = new ImageIcon("./resources/spot-light.gif").getImage();
+        g.drawImage(spotlight, this.getWidth() - spotlight.getWidth(this), 0, this);
+
+        Image disco = new ImageIcon("./resources/disco.gif").getImage();
+        g.drawImage(disco, (this.getWidth() - disco.getWidth(this)) / 2, 0, this);
+        
+        Image disco_lights = new ImageIcon("./resources/disco-light.gif").getImage();
+        g.drawImage(disco_lights, (this.getWidth() - disco_lights.getWidth(this)) / 2, 0, this);
 
         this.host.draw(g, this);
 
         g.setColor(new Color(0, 0, 0));
         g.drawRect(margin, margin, this.getWidth() - 2 * margin, this.getHeight() - 2 * margin);
 
+        
     }
 
     @Override
