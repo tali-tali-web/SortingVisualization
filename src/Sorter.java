@@ -33,7 +33,7 @@ public class Sorter {
         sound.start();
     }
 
-    public void bubbleStep(ArrayModel model) {
+    public int bubbleStep(ArrayModel model) {
         switch (stage) {
             case 0 -> {
                 if (i == j) {
@@ -45,11 +45,17 @@ public class Sorter {
                 a.setLift(true);
                 b.setLift(true);
 
+                this.stage = 1;
+                return 6;
+
             } case 1 -> {
                 if (a.value() > b.value()) {
                     model.swap(i, j);
                     this.playSound();
                 }
+
+                this.stage = 2;
+                return 2;
 
             } case 2 -> {
 
@@ -66,21 +72,24 @@ public class Sorter {
                     end = true;
                 }
 
+                this.stage = 0;
+                return 3;
+
             } default -> {
                 System.out.println("How did you get here.");
             }
         }
 
-        stage = (stage + 1) % 3;
+        return -1;
     }
 
-    public void insertionSort(ArrayModel model) {
+    public int insertionSort(ArrayModel model) {
         switch (this.stage) {
             case 0 -> {
 
                 if (i >= model.length()) {
                     end = true;
-                    return;
+                    return -1;
 
                 } else if (i <= 0) {
                     if (a != null) a.setLift(false);
@@ -88,7 +97,7 @@ public class Sorter {
 
                     i = j++;
                     stage = 0;
-                    return;
+                    return 6;
                 }
 
                 a = model.index(i);
@@ -98,24 +107,28 @@ public class Sorter {
                 b.setLift(true);
 
                 this.stage++;
+                return 3;
 
             } case 1 -> {
                 if (b.value() > a.value()) {
                     model.swap(i, i-1);
                     this.playSound();
-                    
+
                     a.setLift(false);
                     b.setLift(false);
 
                     i--;
                     this.stage = 0;
-                    return;
+                    return 5;
+
                 } else {
                     a.setLift(false);
                     b.setLift(false);
                 }
 
                 this.stage++;
+                return 9;
+
             } case 2 -> {
 
                 a.setLift(false);
@@ -123,14 +136,16 @@ public class Sorter {
 
                 i = j++;
                 this.stage = 0;
+                return 5;
 
             } default -> {
                 System.out.println("How did you get here.");
             }
         }
+        return -1;
     }
 
-    public void mergeSort(ArrayModel model) {
+    public int mergeSort(ArrayModel model) {
         // How is this even supposed to work... ez pz lemon squeezy
         switch (this.stage) {
             case 0 -> {
@@ -141,7 +156,7 @@ public class Sorter {
 
                     if (width >= model.length()) {
                         end = true;
-                        return;
+                        return -1;
                     }
 
                     left = 0;
@@ -156,6 +171,7 @@ public class Sorter {
 
                 this.stage = 1;
                 this.playSound();
+                return 4;
 
             } case 1 -> {
 
@@ -192,6 +208,8 @@ public class Sorter {
 
                 }
 
+                return 5;
+
             } case 2 -> {
 
                 if (i < right) {
@@ -202,83 +220,96 @@ public class Sorter {
                     this.playSound();
                     this.stage = 0;
                 }
+
+                return 9;
                 
             } default -> {
                 System.out.println("How did you get here.");
             }
         }
-
+        return -1;
     }
 
-    public void selectionSort(ArrayModel model) {
-        if (counter >= model.length()) {
-            end = true;
-            return;
-        }
-        
+    public int selectionSort(ArrayModel model) {
         switch (this.stage) {
             case 0 -> {
-
-                model.index(i).setLift(true);
-                if (j < model.length()) {
-                    
-                    model.index(j - 1).setLift(false);
-                    model.index(j).setLift(true);
-                    if (model.index(i).value() > model.index(j).value()) {
-                        this.stage = 1;
-                    }
-
-                } else {
-
-                    model.index(counter).setLift(true);
-                    this.stage = 2;
+                if (counter >= model.length()) {
+                    end = true;
+                    return -1;
                 }
-
-                j++;
-
-            } case 1 -> {
-                
-                model.index(i).setLift(false);
-                i = j - 1;
-                this.stage = 0;
-
-            } case 2 -> {   
-                
-                model.swap(i, counter);
-
-                model.index(i).setLift(false);
-                model.index(counter++).setLift(false);
 
                 i = counter;
                 j = i + 1;
-                this.stage = 0;
+                this.stage = 1;
+                return 2;
+            } case 1 -> {
+                this.stage = 2;
+                return 3;
+            } case 2 -> {
+                if (j < model.length()) {
+                    model.index(i).setLift(true);
+                    model.index(j).setLift(true);
+                    this.stage = 3;
+                    return 6;
+                }
 
+                this.stage = 4;
+                return 12;
+
+            } case 3 -> {
+                model.index(j - 1).setLift(false);
+
+                if (model.index(j).value() < model.index(i).value()) {
+                    model.index(i).setLift(false);
+                    i = j;
+                    model.index(i).setLift(true);
+                    this.stage = 2;
+                    j++;
+                    return 7;
+                }
+
+                j++;
+                this.stage = 2;
+                return 6;
+
+            } case 4 -> {
+                model.swap(i, counter);
+
+                model.index(i).setLift(false);
+                model.index(counter).setLift(false);
+
+                counter++;
+                this.stage = 0;
+                return 10;
             } default -> {
                 System.out.println("Yeah don't be here.");
             }
         }
+        return -1;
     }
 
-    public void step(ArrayModel model) {
+    public int step(ArrayModel model) {
 
         if (end) {
             model.setSpeed(0); 
-            return;
+            return -1;
         }
         
         switch (this.sortType) {
             case Algorithms.BUBBLE_SORT -> {
-                this.bubbleStep(model);    
+                return this.bubbleStep(model);    
             } case Algorithms.INSERTION_SORT -> {
-                this.insertionSort(model);
+                return this.insertionSort(model);
             } case Algorithms.MERGE_SORT -> {
-                this.mergeSort(model);
+                return this.mergeSort(model);
             } case Algorithms.SELECTION_SORT -> {
-                this.selectionSort(model);
+                return this.selectionSort(model);
             } default -> {
                 System.out.println("what the hell kind of sort did you give me...");
             }
         }
+
+        return -1;
     }
 
     public void prepare(ArrayModel model) {

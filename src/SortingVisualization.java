@@ -49,8 +49,7 @@ public class SortingVisualization {
         codePanel = new CodePanel();
 
         splitter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, visualizationPanel, codePanel);
-        splitter.setResizeWeight(0.9);
-        splitter.setDividerSize(0);
+        splitter.setResizeWeight(0.8);
 
         // Adding everything relevant
         frame.add(splitter, BorderLayout.CENTER);
@@ -66,22 +65,80 @@ public class SortingVisualization {
 
             String algorithm = (String) controlPanel.getMenu().getSelectedItem();
             switch (algorithm) {
-                case "Bubble Sort":
+                case "Bubble Sort" -> {
                     sorter.sortType = Algorithms.BUBBLE_SORT;
-                    break;
-                case "Insertion Sort":
+                    codePanel.setText("""
+                                                          
+                    void bubbleSort(int[] array, int n) {
+
+                        for (int i = 0; i < n; i++) {
+                            for (int j = 0; j < n - i - 1; j++) {
+
+                                if (array[j] > array[j + 1]) {
+                                    swap(j, j + 1);
+                                }
+
+                            }
+                        }
+                    }
+
+                    """);
+                } case "Insertion Sort" -> {
                     sorter.sortType = Algorithms.INSERTION_SORT;
-                    break;
-                case "Merge Sort":
+                    codePanel.setText("""
+                                                          
+                    void insertionSort(int[] array) {
+
+                        for (int i = 1; i < array.length; i++) {
+                            int key = array[i];
+                            int j = i - 1;
+
+                            while (j >= 0 && array[j] > key) {
+                                array[j + 1] = array[j];
+                                j--;
+                            }
+
+                            array[j + 1] = key;
+                        }
+                    }""");
+                } case "Merge Sort" -> {
                     sorter.sortType = Algorithms.MERGE_SORT;
-                    break;
-                case "Selection Sort":
+                    codePanel.setText("""
+                                                          
+                    void mergeSort(int[] array, int n) {
+
+                        int width, left, mid, right;
+                        for (width = 1; width < n; width *= 2) {
+                            for (left = 0; left < n; left += 2 * width) {
+
+                                mid = Math.min(left + width, n);
+                                right = Math.min(mid + width, n);
+
+                                merge(array, left, mid, right);
+
+                            }
+                        }
+                    }""");
+                } case "Selection Sort" -> {
                     sorter.sortType = Algorithms.SELECTION_SORT;
-                    break;
-                default:
+                    codePanel.setText("""
+                                                          
+                    void selectionSort(int[] array) {
+
+                        for (int i = 0; i < array.length; i++) {
+                            int min = i;
+
+                            for (int j = i + 1; j < array.length; j++) {
+                                if (array[j] < array[min]) min = j;
+                            }
+
+                            swap(i, min);
+                        }
+                    }""");
+                } default -> {
                     sorter.sortType = Algorithms.NONE;
                     System.out.printf("What did you type?? WHAT IS %S\n", algorithm);
-                    break;
+                }
             }
 
             sorter.prepare(host);
@@ -92,6 +149,7 @@ public class SortingVisualization {
             host.setLength((int) controlPanel.getSpinner().getValue()); 
             sorter.prepare(host);
             visualizationPanel.repaint();
+
         });
         
         controlPanel.plause().addActionListener(e -> {
@@ -114,7 +172,12 @@ public class SortingVisualization {
         });
 
         sortTimer = new Timer(16, e -> {
-            if (host.getSpeed() != 0) sorter.step(host);
+            if (host.getSpeed() != 0) {
+                int line = sorter.step(host);
+                if (line != -1) {
+                    codePanel.highlightLine(line);
+                }
+            }
             visualizationPanel.repaint();
         });
 
@@ -163,7 +226,6 @@ public class SortingVisualization {
         frame.setVisible(true);
 
         // Background audio, just loading of all the audio I needed
-
         try {
             Clip clip = AudioSystem.getClip();
             Clip mambo_clip = AudioSystem.getClip();
