@@ -5,6 +5,8 @@ import src.ArrayModel;
 
 public class MergeSort {
 
+    private final ArrayModel host;
+
     private ArrayElement[] temporary;
     private ArrayElement a, b;
 
@@ -15,14 +17,34 @@ public class MergeSort {
     private boolean end;
 
     public MergeSort(ArrayModel model) {
-        prepare(model);
+        this.host = model;
+        prepare();
     }
 
     public void playSound() {
 
     }
 
-    public final void prepare(ArrayModel model) {
+    public String getCode() {
+        return """
+                                                          
+                void mergeSort(int[] array, int n) {
+
+                    int width, left, mid, right;
+                    for (width = 1; width < n; width *= 2) {
+                        for (left = 0; left < n; left += 2 * width) {
+
+                            mid = Math.min(left + width, n);
+                            right = Math.min(mid + width, n);
+
+                            merge(array, left, mid, right);
+
+                        }
+                    }
+                }""";
+    }
+
+    public final void prepare() {
         stage = 0;
         counter = 0;
         end = false;
@@ -38,19 +60,21 @@ public class MergeSort {
 
         this.stage = 1;
 
-        temporary = new ArrayElement[model.length()];
+        temporary = new ArrayElement[this.host.length()];
     }
 
-    public int mergeSort(ArrayModel model) {
+    public int step() {
+        if (end) return -1;
+        
         // How is this even supposed to work... ez pz lemon squeezy
         switch (this.stage) {
             case 0 -> {
                 left = right;
 
-                if (left >= model.length()) {
+                if (left >= this.host.length()) {
                     width *= 2;
 
-                    if (width >= model.length()) {
+                    if (width >= this.host.length()) {
                         end = true;
                         return -1;
                     }
@@ -58,8 +82,8 @@ public class MergeSort {
                     left = 0;
                 }
 
-                middle = Math.min(left + width, model.length());
-                right = Math.min(middle + width, model.length());
+                middle = Math.min(left + width, this.host.length());
+                right = Math.min(middle + width, this.host.length());
 
                 i = left;
                 j = middle;
@@ -76,13 +100,13 @@ public class MergeSort {
 
             } case 2 -> {
 
-                a = (i < middle) ? model.index(i) : null;
+                a = (i < middle) ? this.host.index(i) : null;
                 this.stage = 3;
                 return 7;
 
             } case 3 -> {
 
-                b = (j < right) ? model.index(j) : null;
+                b = (j < right) ? this.host.index(j) : null;
                 this.stage = 4;
                 return 8;
 
@@ -126,7 +150,7 @@ public class MergeSort {
             } case 5 -> {
 
                 if (i < right) {
-                    model.setIndex(temporary[counter++], i++);
+                    this.host.setIndex(temporary[counter++], i++);
                     temporary[counter-1].setLift(false);
                     
                 } else {

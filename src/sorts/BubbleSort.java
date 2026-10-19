@@ -5,27 +5,52 @@ import src.ArrayModel;
 
 public class BubbleSort {
 
+    private final ArrayModel host;
+
     private ArrayElement a, b;
     private int i, j, stage;
     private boolean end;
 
+
     public BubbleSort(ArrayModel model) {
-        prepare(model);
+        this.host = model;
+        prepare();
     }
 
     public void playSound() {
 
     }
 
-    public final void prepare(ArrayModel model) {
-        stage = 0;
-        end = false;
-        
-        i = -1;
-        j = model.length() - 1;
+    public String getCode() {
+        return """
+                                                          
+                void bubbleSort(int[] array, int n) {
+
+                    for (int i = 0; i < n; i++) {
+                        for (int j = 0; j < n - i - 1; j++) {
+
+                            if (array[j] > array[j + 1]) {
+                                swap(j, j + 1);
+                            }
+
+                        }
+                    }
+                }
+
+                """;
     }
 
-    public int step(ArrayModel model) {
+    public final void prepare() {
+        stage = 0;
+        end = false;
+
+        i = -1;
+        j = this.host.length() - 1;
+    }
+
+    public int step() {
+        if (end) return -1;
+        
         switch (stage) {
             case 0 -> {
                 this.stage = 1;
@@ -50,8 +75,8 @@ public class BubbleSort {
             
             } case 2 -> {
 
-                a = model.index(i);
-                b = model.index(i + 1);
+                a = this.host.index(i);
+                b = this.host.index(i + 1);
 
                 a.setLift(true);
                 if (a.getValue() > b.getValue()) b.setLift(true);
@@ -76,7 +101,7 @@ public class BubbleSort {
 
             } case 4 -> {
 
-                model.swap(i, i + 1);
+                this.host.swap(i, i + 1);
                 this.playSound();
                 this.stage = 5;
                 return 7;

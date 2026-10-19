@@ -15,6 +15,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.Timer;
+import src.panels.CodePanel;
+import src.panels.ControlPanel;
+import src.panels.VisualizationPanel;
 
 public class SortingVisualization {
 
@@ -44,7 +47,7 @@ public class SortingVisualization {
         this.host = new ArrayModel(-15, -frame.getHeight() / 2, 20);
 
         // Initializing all the relevant parts of the program
-        sorter = new Sorter();
+        sorter = new Sorter(this.host);
         controlPanel = new ControlPanel();
 
         visualizationPanel = new VisualizationPanel(this.host);
@@ -67,119 +70,48 @@ public class SortingVisualization {
 
         controlPanel.getMenu().addActionListener(e -> { 
 
-            String algorithm = (String) controlPanel.getMenu().getSelectedItem();
-            switch (algorithm) {
-                case "Bubble Sort" -> {
-                    sorter.sortType = Algorithms.BUBBLE_SORT;
-                    codePanel.setText("""
-                                                          
-                    void bubbleSort(int[] array, int n) {
+            sorter.setSortType(
+                switch ((String) controlPanel.getMenu().getSelectedItem()) 
+                {
+                    case "Bubble Sort" -> Algorithms.BUBBLE_SORT;
+                    case "Insertion Sort" -> Algorithms.INSERTION_SORT;
+                    case "Merge Sort" -> Algorithms.MERGE_SORT;
+                    case "Selection Sort" -> Algorithms.SELECTION_SORT;
+                    default -> Algorithms.NONE;
+                });
 
-                        for (int i = 0; i < n; i++) {
-                            for (int j = 0; j < n - i - 1; j++) {
-
-                                if (array[j] > array[j + 1]) {
-                                    swap(j, j + 1);
-                                }
-
-                            }
-                        }
-                    }
-
-                    """);
-                } case "Insertion Sort" -> {
-                    sorter.sortType = Algorithms.INSERTION_SORT;
-                    codePanel.setText("""
-                                                          
-                    void insertionSort(int[] array) {
-
-                        for (int i = 1; i < array.length; i++) {
-                            int key = array[i];
-                            int j = i - 1;
-
-                            while (j >= 0 && array[j] > key) {
-                                array[j + 1] = array[j];
-                                j--;
-                            }
-
-                            array[j + 1] = key;
-                        }
-                    }""");
-                } case "Merge Sort" -> {
-                    sorter.sortType = Algorithms.MERGE_SORT;
-                    codePanel.setText("""
-                                                          
-                    void mergeSort(int[] array, int n) {
-
-                        int width, left, mid, right;
-                        for (width = 1; width < n; width *= 2) {
-                            for (left = 0; left < n; left += 2 * width) {
-
-                                mid = Math.min(left + width, n);
-                                right = Math.min(mid + width, n);
-
-                                merge(array, left, mid, right);
-
-                            }
-                        }
-                    }""");
-                } case "Selection Sort" -> {
-                    sorter.sortType = Algorithms.SELECTION_SORT;
-                    codePanel.setText("""
-                                                          
-                    void selectionSort(int[] array) {
-
-                        for (int i = 0; i < array.length; i++) {
-                            int min = i;
-
-                            for (int j = i + 1; j < array.length; j++) {
-                                if (array[j] < array[min]) min = j;
-                            }
-
-                            swap(i, min);
-                        }
-                    }""");
-                } default -> {
-                    sorter.sortType = Algorithms.NONE;
-                    System.out.printf("What did you type?? WHAT IS %S\n", algorithm);
-                }
-            }
-
-            sorter.prepare(host);
+            codePanel.setText(sorter.getCode());
             visualizationPanel.repaint();
         });
 
         controlPanel.getSpinner().addChangeListener(e -> { 
             host.setLength((int) controlPanel.getSpinner().getValue()); 
-            sorter.prepare(host);
-            visualizationPanel.repaint();
+
+            sorter.prepare();
 
         });
         
         controlPanel.plause().addActionListener(e -> {
 
-            sorter.step(host);
-            sorter.prepare(host);
-
             host.setSpeed(host.getSpeed() == 0 ? (int) controlPanel.getSlider().getValue() : 0);
-            
-            visualizationPanel.repaint();
+
         });
 
         controlPanel.reset().addActionListener(e -> {
             host.setSpeed(0);
 
             host.reset();
-            sorter.prepare(host);
-            visualizationPanel.repaint();
-            // Add option to start from the initial parameters
+            sorter.prepare();
+
         });
 
         sortTimer = new Timer(16, e -> {
             if (host.getSpeed() != 0) {
-                int line = sorter.step(host);
+                int line = sorter.step();
                 if (line != -1) {
                     codePanel.highlightLine(line);
+                } else {
+                    codePanel.highlightReset();
                 }
             }
             visualizationPanel.repaint();
@@ -215,9 +147,6 @@ public class SortingVisualization {
             controlPanel.setBackground(Color.getHSBColor(hue, 1f, 1f));
             controlPanel.getSlider().setBackground(Color.getHSBColor(hue, 1f, 1f));
             controlPanel.getSpinner().setBackground(Color.getHSBColor(hue, 1f, 1f));
-            
-            //controlPanel.setBackground(Color.PINK);
-
 
         });
         
@@ -230,7 +159,7 @@ public class SortingVisualization {
             sortTimer.stop();
 
             host.randomize();
-            sorter.prepare(host);
+            sorter.prepare();
 
             controlTimer.start();
             sortTimer.start();
@@ -261,30 +190,17 @@ public class SortingVisualization {
 
             clip.loop(Clip.LOOP_CONTINUOUSLY);
 
-            sorter.setSound(mambo_clip);
+            // sorter.setSound(mambo_clip);
 
         } catch (IOException | UnsupportedAudioFileException |
                 LineUnavailableException e) {
             e.printStackTrace();
         }
 
-        sorter.prepare(host);
-        codePanel.setText("""
-                                                          
-        void bubbleSort(int[] array, int n) {
+        sorter.prepare();
+        codePanel.setText(sorter.getCode());
 
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n - i - 1; j++) {
-
-                    if (array[j] > array[j + 1]) {
-                        swap(j, j + 1);
-                    }
-
-                }
-            }
-        }
-
-        """);
+        System.out.print("Testing\n");
     }
 
     public void placeholder() {
