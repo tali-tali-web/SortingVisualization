@@ -199,6 +199,8 @@ public class SortingVisualization {
 
         sorter.prepare();
         codePanel.setText(sorter.getCode());
+
+        System.out.print("Testing\n");
     }
 
     public void placeholder() {
