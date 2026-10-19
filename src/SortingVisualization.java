@@ -85,8 +85,8 @@ public class SortingVisualization {
         });
 
         controlPanel.getSpinner().addChangeListener(e -> { 
-            host.setLength((int) controlPanel.getSpinner().getValue()); 
 
+            host.setLength((int) controlPanel.getSpinner().getValue()); 
             sorter.prepare();
 
         });
@@ -98,9 +98,10 @@ public class SortingVisualization {
         });
 
         controlPanel.reset().addActionListener(e -> {
-            host.setSpeed(0);
 
+            host.setSpeed(0);
             host.reset();
+
             sorter.prepare();
 
         });
@@ -114,6 +115,7 @@ public class SortingVisualization {
                     codePanel.highlightReset();
                 }
             }
+
             visualizationPanel.repaint();
         });
 
@@ -155,20 +157,21 @@ public class SortingVisualization {
 
         controlPanel.randomize().addActionListener(e -> { 
 
-            controlTimer.stop();
-            sortTimer.stop();
+            controlTimer.stop(); sortTimer.stop();
 
             host.randomize();
             sorter.prepare();
 
-            controlTimer.start();
-            sortTimer.start();
-
-            visualizationPanel.repaint();    
+            controlTimer.start(); sortTimer.start();
         });
 
         frame.setVisible(true);
 
+        sorter.prepare();
+        codePanel.setText(sorter.getCode());
+    }
+
+    public void loadAudio() {
         // Background audio, just loading of all the audio I needed
         try {
             Clip clip = AudioSystem.getClip();
@@ -196,20 +199,11 @@ public class SortingVisualization {
                 LineUnavailableException e) {
             e.printStackTrace();
         }
-
-        sorter.prepare();
-        codePanel.setText(sorter.getCode());
-
-        System.out.print("Testing\n");
-    }
-
-    public void placeholder() {
-        System.out.print("Yeah this is working...\n");
     }
 
     public static void main(String[] args) {
         SortingVisualization mn = new SortingVisualization();
-        mn.placeholder();
+        mn.loadAudio();
     }
 
 }
