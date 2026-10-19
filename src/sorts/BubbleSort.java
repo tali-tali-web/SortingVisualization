@@ -1,5 +1,6 @@
 package src.sorts;
 
+import javax.sound.sampled.Clip;
 import src.ArrayElement;
 import src.ArrayModel;
 
@@ -17,8 +18,12 @@ public class BubbleSort {
         prepare();
     }
 
-    public void playSound() {
+    public void playSound(Clip clip) {
+        if (clip == null) return;
+        if (clip.isRunning()) clip.stop();
 
+        clip.setFramePosition(0);
+        clip.start();
     }
 
     public String getCode() {
@@ -48,7 +53,7 @@ public class BubbleSort {
         j = this.host.length() - 1;
     }
 
-    public int step() {
+    public int step(Clip clip) {
         if (end) return -1;
         
         switch (stage) {
@@ -102,7 +107,7 @@ public class BubbleSort {
             } case 4 -> {
 
                 this.host.swap(i, i + 1);
-                this.playSound();
+                this.playSound(clip);
                 this.stage = 5;
                 return 7;
                 
@@ -120,5 +125,9 @@ public class BubbleSort {
         }
 
         return -1;
+    }
+
+    public boolean getEnd() {
+        return this.end;
     }
 }

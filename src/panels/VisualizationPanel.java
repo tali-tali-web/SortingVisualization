@@ -24,11 +24,17 @@ public class VisualizationPanel extends JPanel implements KeyListener {
     public boolean left() { return this.left; }
     public boolean right() { return this.right; }
 
+    private final Image spotlight, disco, disco_lights;
+
     public VisualizationPanel(ArrayModel host) {
         super();
 
         this.host = host;
         this.host.randomize();
+
+        spotlight = loadImage("./resources/spot-light.gif");
+        disco = loadImage("./resources/disco.gif");
+        disco_lights = loadImage("./resources/disco-light.gif");
 
         addKeyListener(this);   
         addMouseListener(new MouseAdapter() {
@@ -43,6 +49,10 @@ public class VisualizationPanel extends JPanel implements KeyListener {
         
     }
 
+    public final Image loadImage(String filename) {
+        return new ImageIcon(filename).getImage();
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -50,18 +60,12 @@ public class VisualizationPanel extends JPanel implements KeyListener {
         g.setColor(new Color(0, 0, 0));
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
-
-        Image spotlight = new ImageIcon("./resources/spot-light.gif").getImage();
         g.drawImage(spotlight, this.getWidth() - spotlight.getWidth(this), 0, this);
-
-        Image disco = new ImageIcon("./resources/disco.gif").getImage();
         g.drawImage(disco, (this.getWidth() - disco.getWidth(this)) / 2, 0, this);
-        
-        Image disco_lights = new ImageIcon("./resources/disco-light.gif").getImage();
         g.drawImage(disco_lights, (this.getWidth() - disco_lights.getWidth(this)) / 2, 0, this);
 
         this.host.draw(g, this);
-
+ 
         g.setColor(new Color(0, 0, 0));
         g.drawRect(margin, margin, this.getWidth() - 2 * margin, this.getHeight() - 2 * margin);
 

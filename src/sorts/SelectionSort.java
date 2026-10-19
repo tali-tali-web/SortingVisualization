@@ -1,5 +1,6 @@
 package src.sorts;
 
+import javax.sound.sampled.Clip;
 import src.ArrayModel;
 
 public class SelectionSort {
@@ -14,8 +15,12 @@ public class SelectionSort {
         prepare();
     }
 
-    public void playSound() {
+    public void playSound(Clip clip) {
+        if (clip == null) return;
+        if (clip.isRunning()) clip.stop();
 
+        clip.setFramePosition(0);
+        clip.start();
     }
 
     public String getCode() {
@@ -44,7 +49,7 @@ public class SelectionSort {
         j = 1;
     }
 
-    public int step() {
+    public int step(Clip clip) {
         if (end) return -1;
         
         switch (this.stage) {
@@ -94,7 +99,7 @@ public class SelectionSort {
 
                 this.host.index(j - 1).setLift(false);
                 this.host.swap(i, counter);
-                this.playSound();
+                this.playSound(clip);
 
                 this.host.index(i).setLift(false);
                 this.host.index(counter).setLift(false);
@@ -110,5 +115,7 @@ public class SelectionSort {
         return -1;
     }
 
-
+    public boolean getEnd() {
+        return this.end;
+    }
 }

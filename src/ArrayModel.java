@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Random;
 import javax.swing.ImageIcon;
+import src.panels.VisualizationPanel;
 
 enum Algorithms {
     BUBBLE_SORT, 
@@ -28,7 +29,6 @@ public class ArrayModel {
         this.y = y;
         this.array = new ArrayElement[length];
         this.original = new ArrayElement[length];
-
     }
 
     public ArrayElement index(int index) { 
@@ -39,8 +39,10 @@ public class ArrayModel {
         this.array[i] = element;
     }
     
+    public int length() { 
+        return this.array.length; 
+    }
 
-    public int length() { return this.array.length; }
     public void setLength(int new_length) {
         this.array = new ArrayElement[new_length];
         this.original = new ArrayElement[new_length];
@@ -48,13 +50,21 @@ public class ArrayModel {
         this.randomize();
     }
 
+    public void setSpeed(int new_speed) { 
+        this.speed = new_speed; 
+    }
+    
+    public int  getSpeed() {
+        return this.speed;       
+    }
 
-    public void setSpeed(int new_speed) { this.speed = new_speed; }
-    public int  getSpeed(             ) {return this.speed;       }
-    public void addSpeed(int speed    ) { this.speed += speed;    }
+    public void addX(int added) { 
+        this.x += added; 
+    }
 
-    public void addX(int added) { this.x += added; }
-    public void addY(int added) { this.y += added; }
+    public void addY(int added) { 
+        this.y += added; 
+    }
 
     public void draw(Graphics g, VisualizationPanel panel) {
         
@@ -62,7 +72,14 @@ public class ArrayModel {
         for (ArrayElement element : array) {
 
 
-            g.setColor(element.getLift() ? new Color(255, 100, 100) : new Color(255, 255, 255));
+            Color color = Color.WHITE;
+            if (element.getLift()) {
+                color = new Color(255, 100, 100);
+            } else if (element.getVerified()) {
+                color = new Color(100, 255, 100);
+            }
+
+            g.setColor(color);
             g.fillRect(
                 -this.x + cumulative, 
                 -this.y - (element.getLift() ? 30 + margin : 0) - 30 - element.getValue() * 2,
@@ -78,12 +95,11 @@ public class ArrayModel {
             );
 
             cumulative += 30 + margin;
-
         }
 
-        g.drawImage(new ImageIcon("./resources/teto-kasane-teto.gif").getImage(), -x - 100, -y + 100,  panel);
-        g.drawImage(new ImageIcon("./resources/kasane-teto-teto.gif").getImage(), -x - 100, -y - 200,  panel);
-        g.drawImage(new ImageIcon("./resources/pearto-teto.gif").getImage(), -x + 300, -y - 250,  panel);
+        g.drawImage(new ImageIcon("./resources/teto-kasane-teto.gif").getImage(), -x - 150, -y + 100,  panel);
+        g.drawImage(new ImageIcon("./resources/kasane-teto-teto.gif").getImage(), -x - 200, -y - 200,  panel);
+        g.drawImage(new ImageIcon("./resources/pearto-teto.gif").getImage(), -x + 300, -y - 400,  panel);
 
     }
 
@@ -99,6 +115,7 @@ public class ArrayModel {
         for (int i = 0; i < array.length; i++) {
             array[i] = original[i];
             array[i].setLift(false);
+            array[i].setVerified(false);
         }
     }
 
