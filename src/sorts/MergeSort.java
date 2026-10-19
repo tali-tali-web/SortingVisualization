@@ -1,5 +1,6 @@
 package src.sorts;
 
+import javax.sound.sampled.Clip;
 import src.ArrayElement;
 import src.ArrayModel;
 
@@ -21,8 +22,12 @@ public class MergeSort {
         prepare();
     }
 
-    public void playSound() {
+    public void playSound(Clip clip) {
+        if (clip == null) return;
+        if (clip.isRunning()) clip.stop();
 
+        clip.setFramePosition(0);
+        clip.start();
     }
 
     public String getCode() {
@@ -63,7 +68,7 @@ public class MergeSort {
         temporary = new ArrayElement[this.host.length()];
     }
 
-    public int step() {
+    public int step(Clip clip) {
         if (end) return -1;
         
         // How is this even supposed to work... ez pz lemon squeezy
@@ -90,7 +95,7 @@ public class MergeSort {
                 counter = 0;
 
                 this.stage = 1;
-                this.playSound();
+                this.playSound(clip);
                 return 4;
 
             } case 1 -> {
@@ -117,7 +122,7 @@ public class MergeSort {
                     counter = 0;
 
                     this.stage = 5;
-                    this.playSound();
+                    this.playSound(clip);
 
                     return 5;
 
@@ -154,7 +159,7 @@ public class MergeSort {
                     temporary[counter-1].setLift(false);
                     
                 } else {
-                    this.playSound();
+                    this.playSound(clip);
                     this.stage = 0;
 
                     return 4;
@@ -167,6 +172,10 @@ public class MergeSort {
             }
         }
         return -1;
+    }
+
+    public boolean getEnd() {
+        return this.end;
     }
 
 }

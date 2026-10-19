@@ -1,5 +1,6 @@
 package src;
 
+import javax.sound.sampled.Clip;
 import src.sorts.BubbleSort;
 import src.sorts.InsertionSort;
 import src.sorts.MergeSort;
@@ -12,12 +13,18 @@ public class Sorter {
     private final SelectionSort selectionSort;
     private final InsertionSort insertionSort;
 
+    private final Clip clip;
+
     private Algorithms sortType;
     private final ArrayModel host;
+    private int verifyCounter;
 
-    public Sorter(ArrayModel model) {
+    public Sorter(ArrayModel model, Clip clip) {
         
+        this.clip = clip;
         this.host = model;
+        this.verifyCounter = 0;
+        
         this.sortType = Algorithms.BUBBLE_SORT;
 
         bubbleSort = new BubbleSort(model);
@@ -35,7 +42,6 @@ public class Sorter {
         prepare();
     }
 
-
     public String getCode() {
         return switch (this.sortType) 
         {
@@ -48,6 +54,7 @@ public class Sorter {
     }
 
     public void prepare() {
+        this.verifyCounter = 0;
         switch (this.sortType) 
         {
             case Algorithms.BUBBLE_SORT -> this.bubbleSort.prepare();
@@ -58,14 +65,29 @@ public class Sorter {
     }
 
     public int step() {
-        return switch (this.sortType) 
-        {
-            case Algorithms.BUBBLE_SORT -> this.bubbleSort.step();
-            case Algorithms.MERGE_SORT -> this.mergeSort.step();
-            case Algorithms.SELECTION_SORT -> this.selectionSort.step();
-            case Algorithms.INSERTION_SORT -> this.insertionSort.step();
-            default -> -1;
-        };
+        
+        boolean end = false;
+        switch (this.sortType) {
+            case Algorithms.BUBBLE_SORT ->  {
+                if (bubbleSort.getEnd() && verifyCounter < host.length()) host.index(verifyCounter++).setVerified(true);
+                return this.bubbleSort.step(this.clip);
+            } case Algorithms.MERGE_SORT -> {
+                if (mergeSort.getEnd() && verifyCounter < host.length()) host.index(verifyCounter++).setVerified(true);
+                return this.mergeSort.step(this.clip);
+            } case Algorithms.SELECTION_SORT -> {
+                if (selectionSort.getEnd() && verifyCounter < host.length()) host.index(verifyCounter++).setVerified(true);
+                return this.selectionSort.step(this.clip);
+            } case Algorithms.INSERTION_SORT -> {
+                if (insertionSort.getEnd() && verifyCounter < host.length()) host.index(verifyCounter++).setVerified(true);
+                return this.insertionSort.step(this.clip);
+            } default -> {
+                return -1;
+            }
+        }
+    }
+
+    public void verifySort() {
+
     }
 
 }

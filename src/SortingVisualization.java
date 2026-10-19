@@ -26,11 +26,14 @@ public class SortingVisualization {
     private final ControlPanel controlPanel;
     private final VisualizationPanel visualizationPanel;
     private final CodePanel codePanel;
+    private final JSplitPane splitter;
+
     private final Timer controlTimer;
     private final Timer sortTimer;
+
     private final Sorter sorter;
     private final ArrayModel host;
-    private final JSplitPane splitter;
+    
     private float hue = 0f;
 
     public SortingVisualization() {
@@ -47,7 +50,7 @@ public class SortingVisualization {
         this.host = new ArrayModel(-15, -frame.getHeight() / 2, 20);
 
         // Initializing all the relevant parts of the program
-        sorter = new Sorter(this.host);
+        sorter = new Sorter(this.host, loadAudio("./resources/audio/mambo.wav"));
         controlPanel = new ControlPanel();
 
         visualizationPanel = new VisualizationPanel(this.host);
@@ -62,11 +65,11 @@ public class SortingVisualization {
         frame.add(splitter, BorderLayout.EAST);
         frame.add(controlPanel, BorderLayout.SOUTH);
 
-        // These are the action listeners I had to elevate them up to this part 
-        // In order to make it possible for them to interact with other panels 
-        // I really tried to separate them into their own class files but it's not worth
-        // the complexity
-        // Following java coding standards, I am using getter functions
+        /*
+        I really tried separating the declaration of these action listener functions in their
+        respective class files, however, I Have to put them at the highest scope so different elements can
+        interact each other so it kinda sucks that this feels a bit messy.
+        */
 
         controlPanel.getMenu().addActionListener(e -> { 
 
@@ -80,39 +83,34 @@ public class SortingVisualization {
                     default -> Algorithms.NONE;
                 });
 
+            host.setSpeed(0);
             codePanel.setText(sorter.getCode());
             visualizationPanel.repaint();
         });
 
         controlPanel.getSpinner().addChangeListener(e -> { 
-
             host.setLength((int) controlPanel.getSpinner().getValue()); 
             sorter.prepare();
-
         });
         
         controlPanel.plause().addActionListener(e -> {
-
             host.setSpeed(host.getSpeed() == 0 ? (int) controlPanel.getSlider().getValue() : 0);
-
         });
 
         controlPanel.reset().addActionListener(e -> {
-
             host.setSpeed(0);
             host.reset();
 
             sorter.prepare();
-
         });
 
         sortTimer = new Timer(16, e -> {
             if (host.getSpeed() != 0) {
                 int line = sorter.step();
+
+                codePanel.highlightReset();
                 if (line != -1) {
                     codePanel.highlightLine(line);
-                } else {
-                    codePanel.highlightReset();
                 }
             }
 
@@ -165,45 +163,33 @@ public class SortingVisualization {
             controlTimer.start(); sortTimer.start();
         });
 
-        frame.setVisible(true);
 
         sorter.prepare();
         codePanel.setText(sorter.getCode());
+        frame.setVisible(true);
     }
 
-    public void loadAudio() {
-        // Background audio, just loading of all the audio I needed
+    public final Clip loadAudio(String filename) {
         try {
             Clip clip = AudioSystem.getClip();
-            Clip mambo_clip = AudioSystem.getClip();
-
-            AudioInputStream audio = AudioSystem.getAudioInputStream(
-                new File("./resources/audio/boom-boom.wav")
-            );
-
-            AudioInputStream mambo = AudioSystem.getAudioInputStream(
-                new File("./resources/audio/mambo.wav")
-            );
+            AudioInputStream audio = AudioSystem.getAudioInputStream(new File(filename));
 
             clip.open(audio);
             audio.close();
 
-            mambo_clip.open(mambo);
-            mambo.close();
+            return clip;
 
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-
-            // sorter.setSound(mambo_clip);
-
-        } catch (IOException | UnsupportedAudioFileException |
-                LineUnavailableException e) {
+        } catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
             e.printStackTrace();
         }
+
+        return null;
     }
 
     public static void main(String[] args) {
         SortingVisualization mn = new SortingVisualization();
-        mn.loadAudio();
+
+        mn.loadAudio("./resources/audio/boom-boom.wav").loop(Clip.LOOP_CONTINUOUSLY);
     }
 
 }
