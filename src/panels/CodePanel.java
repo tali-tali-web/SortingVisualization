@@ -1,4 +1,4 @@
-package src;
+package src.panels;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

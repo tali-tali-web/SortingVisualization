@@ -1,5 +1,5 @@
 
-package src;
+package src.panels;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;

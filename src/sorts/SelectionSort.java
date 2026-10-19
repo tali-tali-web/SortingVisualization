@@ -4,18 +4,38 @@ import src.ArrayModel;
 
 public class SelectionSort {
 
+    private final ArrayModel host;
+
     private int i, j, counter, stage;
     private boolean end;
 
     public SelectionSort(ArrayModel model) {
-        prepare(model);
+        this.host = model;
+        prepare();
     }
 
     public void playSound() {
 
     }
 
-    public final void prepare(ArrayModel model) {
+    public String getCode() {
+        return """
+                                                          
+                void selectionSort(int[] array) {
+
+                    for (int i = 0; i < array.length; i++) {
+                        int min = i;
+
+                        for (int j = i + 1; j < array.length; j++) {
+                            if (array[j] < array[min]) min = j;
+                        }
+
+                        swap(i, min);
+                    }
+                }""";
+    }
+
+    public final void prepare() {
         stage = 0;
         counter = 0;
         end = false;
@@ -24,10 +44,12 @@ public class SelectionSort {
         j = 1;
     }
 
-    public int step(ArrayModel model) {
+    public int step() {
+        if (end) return -1;
+        
         switch (this.stage) {
             case 0 -> {
-                if (counter >= model.length()) {
+                if (counter >= this.host.length()) {
                     end = true;
                     return -1;
                 }
@@ -42,9 +64,9 @@ public class SelectionSort {
                 return 3;
 
             } case 2 -> {
-                if (j < model.length()) {
-                    model.index(i).setLift(true);
-                    model.index(j).setLift(true);
+                if (j < this.host.length()) {
+                    this.host.index(i).setLift(true);
+                    this.host.index(j).setLift(true);
                     this.stage = 3;
                     return 6;
                 }
@@ -53,12 +75,12 @@ public class SelectionSort {
                 return 6;
 
             } case 3 -> {
-                model.index(j - 1).setLift(false);
+                this.host.index(j - 1).setLift(false);
 
-                if (model.index(j).getValue() < model.index(i).getValue()) {
-                    model.index(i).setLift(false);
+                if (this.host.index(j).getValue() < this.host.index(i).getValue()) {
+                    this.host.index(i).setLift(false);
                     i = j;
-                    model.index(i).setLift(true);
+                    this.host.index(i).setLift(true);
                     this.stage = 2;
                     j++;
                     return 7;
@@ -70,12 +92,12 @@ public class SelectionSort {
 
             } case 4 -> {
 
-                model.index(j - 1).setLift(false);
-                model.swap(i, counter);
+                this.host.index(j - 1).setLift(false);
+                this.host.swap(i, counter);
                 this.playSound();
 
-                model.index(i).setLift(false);
-                model.index(counter).setLift(false);
+                this.host.index(i).setLift(false);
+                this.host.index(counter).setLift(false);
 
                 counter++;
                 this.stage = 0;
