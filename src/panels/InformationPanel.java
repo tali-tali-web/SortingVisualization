@@ -1,60 +1,44 @@
 package src.panels;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Font;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
 
 public class InformationPanel extends JPanel {
 
-    private JTextPane textPane;
+    private final JTextPane textPane;
 
     public InformationPanel() {
+        setLayout(new BorderLayout());
 
-    setLayout(new BorderLayout());
+        textPane = new JTextPane();
+        textPane.setEditable(false);
+        textPane.setFont(new Font("Times New Roman", Font.PLAIN, 20));
 
-    textPane = new JTextPane();
-    textPane.setEditable(false);
-    textPane.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-
-    add(new JScrollPane(textPane), BorderLayout.CENTER);
+        add(new JScrollPane(textPane), BorderLayout.CENTER);
     }
 
     public void setDescription(String algorithm) {
+        String description;
 
-    String description = "";
-
-    switch (algorithm) {
-
-    case "Bubble Sort":
-    description = "Bubble Sort is a sorting algorithm that puts numbers in order by"
-                + "by repeatedly comparing two neighboring numbers and swapping them  "
-                + "if they're in the wrong order ";
-
-    break;
-
-    case "Insertion Sort":
-    description = "Insertion Sort builds the sorted portion of the array one element at a time "
-                + "Each new element is compared with the elements before it,"
-                + "and larger elements are shifted to the right until the new element "
-                + "can be inserted into its correct position. ";
-
-    break;      
-    case "Merge Sort":
-    description = "Merge Sort divides the array into smaller subarrays until each subarray contains one element. "
-                + "It then repeatedly merges these subarrays while comparing their elements "
-                + "producing larger sorted subarrays until the entire array is sorted. ";
-    break;
-
-    case "Selection Sort":
-    description = "Selection Sort repeatedly searches the unsorted portion of the array for the smallest element. "
-                + "It then swaps that element with the first element of the unsorted portion "
-                + "gradually building a sorted section from left to right..";
-    break;
-
-    default:
-    description = "Select a sorting algorithm to view its description.";
-    break;
+        switch (algorithm) {
+            case "Bubble Sort" ->
+                description = "Bubble Sort repeatedly compares neighboring values and swaps them when they are out of order. "
+                    + "This gradually pushes larger values to the end until the whole array is sorted.";
+            case "Insertion Sort" ->
+                description = "Insertion Sort builds a sorted section one value at a time. "
+                    + "Each new element is compared to the values before it and inserted into its correct position.";
+            case "Merge Sort" ->
+                description = "Merge Sort splits the array into smaller pieces, sorts each piece, and then merges the sorted parts back together. "
+                    + "This approach is efficient for large collections of data.";
+            case "Selection Sort" ->
+                description = "Selection Sort repeatedly finds the smallest remaining value in the unsorted section and swaps it into place. "
+                    + "It gradually builds a sorted section from left to right.";
+            default -> description = "Select a sorting algorithm to view its description.";
         }
 
         textPane.setText(description);
-}
+    }
 }
