@@ -12,7 +12,6 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.Timer;
 import src.panels.CodePanel;
@@ -28,6 +27,7 @@ public class SortingVisualization {
     private final VisualizationPanel visualizationPanel;
     private final CodePanel codePanel;
     private final InformationPanel informationPanel;
+
     private final JSplitPane splitter;
 
     private final Timer controlTimer;
@@ -58,12 +58,12 @@ public class SortingVisualization {
         informationPanel = new InformationPanel();
 
         splitter = new JSplitPane(JSplitPane.VERTICAL_SPLIT, codePanel, informationPanel);
-        splitter.setResizeWeight(0.5);
+        splitter.setResizeWeight(0.1);
         splitter.setPreferredSize(new Dimension(290, 500));
 
         frame.add(visualizationPanel, BorderLayout.CENTER);
-        frame.add(splitter, BorderLayout.EAST);
         frame.add(controlPanel, BorderLayout.SOUTH);
+        frame.add(splitter, BorderLayout.EAST);
 
         controlPanel.getMenu().addActionListener(e -> {
             String selectedAlgorithm = (String) controlPanel.getMenu().getSelectedItem();
@@ -79,6 +79,8 @@ public class SortingVisualization {
             );
 
             host.setSpeed(0);
+            host.reset();
+
             codePanel.setText(sorter.getCode());
             informationPanel.setDescription(selectedAlgorithm);
             visualizationPanel.repaint();
@@ -86,6 +88,8 @@ public class SortingVisualization {
 
         controlPanel.getSpinner().addChangeListener(e -> {
             host.setLength((int) controlPanel.getSpinner().getValue());
+            host.setSpeed(0);
+
             sorter.prepare();
         });
 
@@ -125,12 +129,21 @@ public class SortingVisualization {
                 int max = controlPanel.getSlider().getMaximum();
                 int min = controlPanel.getSlider().getMinimum();
 
-                int delayms = 50 * (max - host.getSpeed()) / (max - min);
+                int baseDelayMs = 3; 
+                
+                double speedRange = (max - min == 0) ? 1.0 : (max - min);
+                double speedFraction = (max - host.getSpeed()) / speedRange; 
+
+                int multiplier = 1 + (int) Math.floor(speedFraction * 5.99);
+
+                int delayms = multiplier * baseDelayMs;
                 sortTimer.setDelay(delayms);
+
                 if (!sortTimer.isRunning()) {
                     sortTimer.start();
                 }
             }
+
 
             hue += 0.005f;
             if (hue >= 1f) hue = 0f;
@@ -152,6 +165,8 @@ public class SortingVisualization {
 
             controlTimer.start();
             sortTimer.start();
+
+            host.setSpeed(0);
         });
 
         sorter.prepare();

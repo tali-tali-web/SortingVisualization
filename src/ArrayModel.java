@@ -109,6 +109,7 @@ public class ArrayModel {
             array[i] = new ArrayElement(random.nextInt(100));
             original[i] = array[i];
         }
+        reset();
     }
 
     public void reset() {

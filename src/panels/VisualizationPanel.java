@@ -38,6 +38,7 @@ public class VisualizationPanel extends JPanel implements KeyListener {
 
         addKeyListener(this);   
         addMouseListener(new MouseAdapter() {
+            
             @Override
             public void mousePressed(MouseEvent e) {
                 requestFocusInWindow();
