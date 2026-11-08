@@ -86,8 +86,4 @@ public class Sorter {
         }
     }
 
-    public void verifySort() {
-
-    }
-
 }
